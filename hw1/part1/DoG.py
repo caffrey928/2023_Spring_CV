@@ -32,7 +32,8 @@ class Difference_of_Gaussian(object):
         for octave in range(self.num_octaves):
             base_index = octave * self.num_guassian_images_per_octave
             for i in range(self.num_DoG_images_per_octave):
-                dog_images.append(cv2.subtract(gaussian_images[base_index + i + 1], gaussian_images[base_index + i]))
+                dog = cv2.subtract(gaussian_images[base_index + i + 1], gaussian_images[base_index + i])
+                dog_images.append(dog)
 
         # Step 3: Thresholding the value and Find local extremum (local maximun and local minimum)
         #         Keep local extremum as a keypoint
@@ -48,7 +49,7 @@ class Difference_of_Gaussian(object):
                     x = i_x + 1
                     for i_y in range(image_size_l - 2):
                         y = i_y + 1
-                        if abs(dog_images[image_index][y][x]) < 3:
+                        if abs(dog_images[image_index][y][x]) < self.threshold:
                             continue
 
                         maximum = True
