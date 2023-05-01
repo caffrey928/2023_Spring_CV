@@ -57,7 +57,13 @@ def main():
         # You don't have to calculate accuracy and loss since you   #
         # don't have labels.                                        #
         #############################################################
-        
+        for batch, data in enumerate(test_loader):
+            sys.stdout.write(f'\rTest batch: {batch + 1} / {len(test_loader)}')
+            sys.stdout.flush()
+            # Data loading.
+            images = data['images'].to(device) # (batch_size, 3, 32, 32), (batch_size)
+            # Forward pass. input: (batch_size, 3, 32, 32), output: (batch_size, 10)
+            predictions.append(torch.argmax(model(images), dim=1).item())
         ######################### TODO End ##########################
 
     test_time = time.time() - test_start_time

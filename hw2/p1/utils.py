@@ -4,6 +4,8 @@ from tqdm import tqdm
 from cyvlfeat.sift.dsift import dsift
 from cyvlfeat.kmeans import kmeans
 from scipy.spatial.distance import cdist
+from time import time
+from collections import Counter
 
 CAT = ['Kitchen', 'Store', 'Bedroom', 'LivingRoom', 'Office',
        'Industrial', 'Suburb', 'InsideCity', 'TallBuilding', 'Street',
@@ -44,6 +46,19 @@ def get_tiny_images(img_paths):
 
     tiny_img_feats = []
 
+    for img in img_paths:
+        image = Image.open(img)
+        # resize the image
+        resized_image = np.array(image.resize((16, 16)))
+        # flatten the image
+        flatten_image = resized_image.flatten()
+        # normalize flattened img
+        normalized_image = (flatten_image - flatten_image.mean()) / flatten_image.std()
+        # append result to output list
+        tiny_img_feats.append(normalized_image)
+
+    # turn output list to ndarray
+    tiny_img_feats = np.array(tiny_img_feats)
     #################################################################
     #                        END OF YOUR CODE                       #
     #################################################################
@@ -98,13 +113,26 @@ def build_vocabulary(img_paths, vocab_size=400):
     #      approximate version of SIFT is about 20 times faster to compute           #
     # You are welcome to use your own SIFT feature                                   #
     ##################################################################################
+    features = []
+    print("build_vocabulary - dsift")
 
+    for img in tqdm(img_paths):
+        image = np.array(Image.open(img)).astype('float32')
+        _, descriptors = dsift(image, step=[2,2], fast=True)
+
+        for descriptor in descriptors:
+            features.append(descriptor)
+
+    features = np.array(features).astype('float32')
+    
+    print("build_vocabulary - kmeans")
+    vocab = kmeans(features, vocab_size)
     ##################################################################################
     #                                END OF YOUR CODE                                #
     ##################################################################################
     
-    # return vocab
-    return None
+    return vocab
+    # return None
 
 ###### Step 1-b-2
 def get_bags_of_sifts(img_paths, vocab):
@@ -141,9 +169,20 @@ def get_bags_of_sifts(img_paths, vocab):
     # NOTE:                                                                    #
     #   1. we recommend first completing function 'build_vocabulary()'         #
     ############################################################################
-
     img_feats = []
+    print("bags of sifts")
 
+    for img in tqdm(img_paths):
+        image = np.array(Image.open(img)).astype('float32')
+        _, descriptors = dsift(image, step=[2,2], fast=True)
+        distance = cdist(vocab, descriptors)
+        # distance = cdist(vocab, descriptors, 'minkowski', p=1.)
+        min_index = np.argmin(distance, axis=0)
+        histogram, _ = np.histogram(min_index, bins=len(vocab))
+        normalized_histogram = [float(temp_histogram)/sum(histogram) for temp_histogram in histogram]
+        img_feats.append(normalized_histogram)
+
+    img_feats = np.array(img_feats)
     ############################################################################
     #                                END OF YOUR CODE                          #
     ############################################################################
@@ -202,9 +241,22 @@ def nearest_neighbor_classify(train_img_feats, train_labels, test_img_feats):
     ###########################################################################
 
     test_predicts = []
+    k = 7
+
+    # count distance between test and train image features
+    distance = cdist(test_img_feats, train_img_feats, 'minkowski', p=1.)
+    # distance = cdist(test_img_feats, train_img_feats)
+    # get train image index of k images with smallest distance
+    k_nearest_index = np.argpartition(distance, k, axis=1)[:, :k]
+    # get labels from index
+    k_nearest_label = np.array(train_labels)[k_nearest_index]
+    # count most common label for each test image
+    for labels in k_nearest_label:
+        # test_predicts.append(max(set(labels), key=labels.tolist().count))
+        test_predicts.append(Counter(labels).most_common()[0][0])
 
     ###########################################################################
     #                               END OF YOUR CODE                          #
     ###########################################################################
-    
+
     return test_predicts
