@@ -4,3 +4,7 @@ __pycache__
 hw2/p2/experiment/
 *.pth
 *.pkl
+*.avi
+*.png
+*.jpeg
+.vscode/
