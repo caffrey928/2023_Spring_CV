@@ -59,7 +59,7 @@ This scripts would first install packages (pip install), then download datasets.
 pip install -r requirements.txt
 ```
 
-**Note: During testing this script, we found that the download link may have some permission issue. (6/13 morning can normally download, 6/13 night cannot). So if you encounter error and cannot get datasets.zip by running the script, please go to the Google Drive Link below and download the zip file and unzip it manually. Sorry for the inconvenience!**
+**Note**: During testing this script, we found that the download link may have some permission issue. (6/13 morning can normally download, 6/13 night cannot). So if you encounter error and cannot get datasets.zip by running the script, please go to the Google Drive Link below and download the zip file and unzip it manually. Sorry for the inconvenience!
 
 ####  Intro about the provided Google Drive Link 
 You don't have to see this part if you are not interested in the code about generating the special dataset.
@@ -83,7 +83,7 @@ python3 train_yolo.py [path to special dataset] [train_device]
 
 After training, you can get a model called 'best.pt'.
 
-**Note: We noticed that some group members' environment may have error because of memory size. You can modify the batch_size(in train_yolo.py line:25) to a smaller value(ex. 16), but the result may not be as good as best.pt(batch_size=48) we provide.**
+**Note**: We noticed that some group members' environment may have error because of memory size. You can modify the batch_size(in train_yolo.py line:25) to a smaller value(ex. 16), but the result may not be as good as best.pt(batch_size=48) we provide.
 
 #### Example Command & Folder Structure
 Command:
@@ -157,6 +157,7 @@ Structure:
 **Under B09901075/**
 
 **1. Prepare Dataset & Environment**
+- Download S1-S8 and put them into a folder first.
 ```
 bash download.sh
 ```
