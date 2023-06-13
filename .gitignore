@@ -9,5 +9,5 @@ hw2/p2/experiment/
 *.jpeg
 .vscode/
 *.jpg
-.zip
+*.zip
 *.pyc
