@@ -1,5 +1,7 @@
 # (2023 Spring) CV Final
 
+Python version we use: 3.10.8
+
 [Part 1: Prepare DataSet & Enviornment](#Prepare-Dataset-amp-Environment)
 
 [Part 2: Train Yolo Model](#Train-Yolo-Model)
@@ -42,12 +44,9 @@ Remember to modify command if your environment can only use "python".
 
 ### Step 2:
 
-<p>
 In this step, because we need to train yolo model, so we have to create dataset with specific format from original dataset. 
-</p>
-<p>
+
 For convenience, we provide the script to download the zip file of specific dataset, and also provide google drive link where we save dataset files and related code.
-</p>
 
 - To download specific dataset and install packages, run
 ```
@@ -59,6 +58,8 @@ This scripts would first install packages (pip install), then download datasets.
 ```
 pip install -r requirements.txt
 ```
+
+**Note: During testing this script, we found that the download link may have some permission issue. (6/13 morning can normally download, 6/13 night cannot). So if you encounter error and cannot get datasets.zip by running the script, please go to the Google Drive Link below and download the zip file and unzip it manually. Sorry for the inconvenience!**
 
 ####  Intro about the provided Google Drive Link 
 You don't have to see this part if you are not interested in the code about generating the special dataset.
@@ -81,6 +82,8 @@ python3 train_yolo.py [path to special dataset] [train_device]
 - [train_device] can be either "0" (use gpu) or "cpu"
 
 After training, you can get a model called 'best.pt'.
+
+**Note: We noticed that some group members' environment may have error because of memory size. You can modify the batch_size(in train_yolo.py line:25) to a smaller value(ex. 16), but the result may not be as good as best.pt(batch_size=48) we provide.**
 
 #### Example Command & Folder Structure
 Command:
@@ -214,7 +217,7 @@ Though the score got lower, we still submits related code to prove our work.
 - After output generated from yolo model or other algorithm, apply this function to output.
 ```
 output, conf = yolo_algorithm(model , input_image)
-output = refine_pupil(output)
+output = refine_pupil(input_img, output)
 ```
 
 ### traditional_cv.py
