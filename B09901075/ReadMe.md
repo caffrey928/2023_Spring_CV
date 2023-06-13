@@ -53,7 +53,12 @@ For convenience, we provide the script to download the zip file of specific data
 ```
 bash download.sh
 ```
-This scripts would download datasets.zip and unzip it.
+This scripts would first install packages (pip install), then download datasets.zip, unzip, and remove(only .zip file) it.
+
+- If only wants to install packages, run
+```
+pip install -r requirements.txt
+```
 
 ####  Intro about the provided Google Drive Link 
 You don't have to see this part if you are not interested in the code about generating the special dataset.
@@ -151,6 +156,10 @@ Structure:
 **1. Prepare Dataset & Environment**
 ```
 bash download.sh
+```
+or if you only want to install packages (and download datasets.zip manually)
+```
+pip install -r requirements.txt
 ```
 **2. Train Yolo Model (can be skipped and use best.pt we provide)**
 ```
