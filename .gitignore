@@ -8,3 +8,6 @@ hw2/p2/experiment/
 *.png
 *.jpeg
 .vscode/
+*.jpg
+.zip
+*.pyc
